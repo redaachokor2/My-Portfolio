@@ -350,7 +350,7 @@ Outside of work, I’m someone who believes in doing my best despite challenges,
                             <p class="description">Developed and deployed a full-featured e-commerce platform with a responsive Angular frontend built using reusable components, integrated with a Node.js (Hapi) backend through Angular services and HttpClient. Implemented MySQL for data management, Firebase Authentication for secure user access, and deployed the application on Google Cloud to ensure scalability and reliable global access.</p>
                         </div>
                         <div class="banner-container">
-                            <img src="/assets/images/projects/image_1.jpg" class="card-img-top banner" alt="PfpFinder Banner">
+                            <img src="/assets/images/projects/image_1.jpg" class="card-img-top banner" alt="angular project">
                         </div>
                     </div>
                 </div>
@@ -397,7 +397,7 @@ Outside of work, I’m someone who believes in doing my best despite challenges,
                             <div class="overlay">
                                 <i class="bi bi-hourglass-split"></i>
                             </div>
-                            <img src="/assets/images/projects/image_3.jpg" class="card-img-top banner" alt="SimplCalc Banner">
+                            <img src="/assets/images/projects/image_3.jpg" class="card-img-top banner" alt="AI project">
                         </div>
                     </div>
                 </div>
@@ -481,7 +481,7 @@ Outside of work, I’m someone who believes in doing my best despite challenges,
             <div class="row justify-content-center" data-aos="fade-down" data-aos-delay="500">
                 <div class="col-lg-8">
                     <div class="contact-form">
-                        <form action="https://formspree.io/f/xldjelqg" method="POST">
+                        <form id="contact-form">
                             <div class="row g-2">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -530,11 +530,92 @@ Outside of work, I’m someone who believes in doing my best despite challenges,
     </button>
 
     <!-- JavaScript -->
+     <script>
+    (function() {
+      const toast = document.getElementById('copy-toast');
+      const showToast = (message) => {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1500);
+      };
+
+      // Copy-to-clipboard for contact info
+      document.querySelectorAll('.copy-text').forEach((el) => {
+        el.addEventListener('click', () => {
+          const text = el.dataset.copy || el.textContent.trim();
+          const message = el.dataset.message || 'Copied';
+
+          const fallbackCopy = () => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+              document.execCommand('copy');
+              showToast(message);
+            } catch (err) {
+              console.warn('Copy failed', err);
+            }
+            document.body.removeChild(textarea);
+          };
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text)
+              .then(() => showToast(message))
+              .catch(() => fallbackCopy());
+          } else {
+            fallbackCopy();
+          }
+        });
+      });
+
+      // EmailJS contact form
+      if (window.emailjs) {
+        emailjs.init('cBcFzVlkEngKYNNVr'); // public key
+
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+          contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Basic email validation before sending
+            const emailInput = contactForm.querySelector('input[name="email"]');
+            if (emailInput) {
+              const emailValue = emailInput.value.trim();
+              const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // requires something like name@example.com
+              if (!emailPattern.test(emailValue)) {
+                showToast('Please enter a valid email address.');
+                emailInput.focus();
+                return;
+              }
+            }
+
+            // Service ID must match what you see in EmailJS: service_ewksdwb
+            emailjs.sendForm('service_ewksdwb', 'template_wb2c29m', this)
+              .then(function () {
+                contactForm.reset();
+                showToast('Message sent successfully!');
+              }, function (error) {
+                console.error('EmailJS error:', error);
+                showToast('Failed to send message. Please try again.');
+              });
+          });
+        }
+      }
+    })();
+  </script>
+
+    <script src="js/main.js"></script>
     <script src="assets/js/aos.js" defer></script>
     <script src="assets/js/jquery-3.7.1.min.js" defer></script>
     <script src="assets/js/owl.carousel.min.js" defer></script>
     <script src="assets/js/bootstrap.min.js" defer></script>
     <script src="assets/js/script.js" defer></script>
+
+
+
+
 
 </body>
 </html>
